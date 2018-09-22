@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Model;
+using Microsoft.EntityFrameworkCore;
+using Model.Repo;
 
 namespace LmsApp.Server
 {
@@ -23,6 +26,10 @@ namespace LmsApp.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<LmsDbContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("LmsDbContext")));
+
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddMvc();
         }
 
